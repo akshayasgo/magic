@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Reading Explosion</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #fff;
+    text-align: center;
+  }
+  .container {
+    margin-top: 100px;
+    padding: 20px;
+  }
+  input, button {
+    padding: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+  }
+  input {
+    width: 150px;
+    color: black;
+  }
+  button {
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
+  }
+  .progress-container {
+    width: 300px;
+    height: 15px;
+    background-color: #ddd;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #3b82f6, #22c55e);
+    transition: width 0.1s linear;
+  }
+  .formula {
+    font-family: monospace;
+    color: #fbbf24;
+    font-size: 1rem;
+    margin-top: 8px;
+    height: 20px;
+  }
+  .explosion {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #facc15, #f97316, #ef4444, transparent);
+    border-radius: 50%;
+    animation: explode 1.2s ease forwards;
+  }
+  @keyframes explode {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(3); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+  }
+  .smoke {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(128,128,128,0.6), transparent);
+    border-radius: 50%;
+    animation: smoke 2s ease forwards;
+  }
+  @keyframes smoke {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.5); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(2.5); }
+  }
+  .result {
+    font-size: 3rem;
+    margin-top: 20px;
+    color: #facc15;
+    font-weight: bold;
+    animation: zoom 0.5s ease forwards;
+  }
+  @keyframes zoom {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .funny {
+    font-size: 1.2rem;
+    color: #38bdf8;
+    margin-top: 10px;
+    animation: fadeIn 1s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Pick a number, I will read your mind</h1>
+  <input type="number" id="numberInput" placeholder="Enter your number">
+  <button onclick="startMindReading()">Read my Mind</button>
+
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="formula" id="formulaText"></div>
+  <div class="result" id="result"></div>
+  <div class="funny" id="funnyText"></div>
+</div>
+
+<script>
+  const formulas = [
+    "E = mc²", "F = ma", "V = IR", "pV = nRT", "ΔE = hf",
+    "λ = h/p", "F = G(m₁m₂) / r²", "Δx·Δp ≥ ħ/2", "s = ut + ½at²", "q = mcΔT"
+  ];
+
+  const funnyPhrases = [
+    "😲 BOOM! Told you I’m a genius!",
+    "💥 Kaboom! My brain just exploded... with YOUR number!",
+    "🔥 Next stop: NASA. I’m *too* good at this.",
+    "😂 Even Einstein is jealous now!",
+    "🤯 Call me Megician from now on!"
+  ];
+
+  function startMindReading() {
+    const number = document.getElementById("numberInput").value;
+    if (!number) {
+      alert("Please enter a number!");
+      return;
+    }
+
+    const progressContainer = document.getElementById("progressContainer");
+    const progressBar = document.getElementById("progressBar");
+    const formulaText = document.getElementById("formulaText");
+    const result = document.getElementById("result");
+    const funnyText = document.getElementById("funnyText");
+
+    progressContainer.style.display = "block";
+    progressBar.style.width = "0%";
+    formulaText.textContent = "";
+    result.textContent = "";
+    funnyText.textContent = "";
+
+    let progress = 0;
+    const interval = setInterval(() => {
+      if (progress >= 100) {
+        clearInterval(interval);
+        showExplosion(() => {
+          formulaText.textContent = "Knew it!";
+          result.textContent = number;
+          funnyText.textContent = funnyPhrases[Math.floor(Math.random() * funnyPhrases.length)];
+        });
+      } else {
+        progress += 2 + Math.random() * 3;
+        progressBar.style.width = progress + "%";
+        if (Math.random() < 0.3) {
+          const randomFormula = formulas[Math.floor(Math.random() * formulas.length)];
+          formulaText.textContent = `${randomFormula} = ${(Math.random() * 9999).toFixed(2)}`;
+        }
+      }
+    }, 100);
+  }
+
+  function showExplosion(callback) {
+    const explosion = document.createElement("div");
+    explosion.classList.add("explosion");
+    document.body.appendChild(explosion);
+
+    for (let i = 0; i < 4; i++) {
+      const smoke = document.createElement("div");
+      smoke.classList.add("smoke");
+      smoke.style.left = `${40 + i * 20}%`;
+      smoke.style.top = `${45 + Math.random() * 10}%`;
+      document.body.appendChild(smoke);
+
+      smoke.addEventListener("animationend", () => smoke.remove());
+    }
+
+    explosion.addEventListener("animationend", () => {
+      explosion.remove();
+      callback();
+    });
+  }
+</script>
+
+</body>
+</html>
